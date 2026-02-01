@@ -1,0 +1,17 @@
+<div class="bg-background-dark font-display text-slate-100 antialiased overflow-hidden h-screen flex">
+  
+  <!-- Sidebar Fixe -->
+  <app-sidebar class="w-[260px] h-full flex-shrink-0 border-r border-border-dark bg-background-dark z-30"></app-sidebar>
+
+  <div class="flex-1 flex flex-col h-full overflow-hidden">
+    
+    <!-- Topbar avec Stats Temps Réel -->
+    <app-topbar></app-topbar>
+
+    <!-- Zone de contenu dynamique -->
+    <main class="flex-1 overflow-y-auto p-8 no-scrollbar">
+      <router-outlet></router-outlet>
+    </main>
+    
+  </div>
+</div>
