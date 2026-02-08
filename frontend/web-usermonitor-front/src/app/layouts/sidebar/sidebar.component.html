@@ -1,0 +1,48 @@
+<aside class="w-[260px] h-full flex-shrink-0 border-r border-border-dark bg-background-dark flex flex-col z-30">
+  <div class="p-6">
+    <div class="flex items-center gap-3 mb-1">
+      <div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+        <span class="material-symbols-outlined text-background-dark font-bold">terminal</span>
+      </div>
+      <h2 class="text-xl font-bold tracking-tight text-white">Arch Dash</h2>
+    </div>
+    <p class="text-[10px] font-mono text-slate-500 uppercase tracking-widest px-1">v1.0.0-Arch</p>
+  </div>
+  <nav class="flex-1 px-4 space-y-1">
+    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-card-dark hover:text-slate-400 transition-all group" 
+       routerLink="/home/dashboard"
+       routerLinkActive="bg-primary/10 text-primary border border-primary/20"
+       [routerLinkActiveOptions]="{ exact: true }">
+      <span class="material-symbols-outlined text-[22px]">dashboard</span>
+      <span class="font-semibold text-sm text-slate-400 ">Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-card-dark hover:text-slate-400 transition-all group" 
+       routerLink="/home/users"
+       routerLinkActive="bg-primary/10 text-primary border border-primary/20">
+      <span class="material-symbols-outlined text-[22px]">group</span>
+      <span class="font-semibold text-sm text-slate-400 ">Utilisateurs</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-card-dark hover:text-slate-400 transition-all group" 
+       routerLink="/home/logs"
+       routerLinkActive="bg-primary/10 text-primary border border-primary/20">
+      <span class="material-symbols-outlined text-[22px]">list_alt</span>
+      <span class="font-semibold text-sm text-slate-400 ">Logs Système</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-card-dark hover:text-slate-400 transition-all group" 
+       routerLink="/home/settings"
+       routerLinkActive="bg-primary/10 text-primary border border-primary/20">
+      <span class="material-symbols-outlined text-[22px]">settings</span>
+      <span class="font-semibold text-sm text-slate-400 ">Settings</span>
+    </a>
+  </nav>
+  <div class="p-4 border-t border-border-dark">
+    <div class="flex items-center gap-3 p-3 rounded-lg bg-card-dark/50">
+      <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold">A</div>
+      <div class="flex-1 overflow-hidden">
+        <p class="text-xs font-bold truncate">Admin Root</p>
+        <p class="text-[10px] text-slate-500 truncate">archierchlinux</p>
+      </div>
+      <span class="material-symbols-outlined text-slate-500 text-sm">logout</span>
+    </div>
+  </div>
+</aside>
