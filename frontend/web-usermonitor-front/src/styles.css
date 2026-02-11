@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  
+  .circular-progress {
+    background: conic-gradient(theme('colors.primary') 75%, theme('colors.border-dark') 0);
+  }
+}
+
+body {
+  @apply bg-background-dark text-slate-100 antialiased;
+}

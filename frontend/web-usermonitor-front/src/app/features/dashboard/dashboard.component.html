@@ -1,0 +1,58 @@
+<main class="flex-1 overflow-y-auto p-8 space-y-8 no-scrollbar">
+  <section class="max-w-6xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+      <h2 class="text-2xl font-bold tracking-tight text-white">System Overview</h2>
+      <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-mono">Real-time Telemetry</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Gauge CPU -->
+      <div class="bg-card-dark p-6 rounded-xl border border-border-dark flex flex-col items-center shadow-xl">
+        <div class="relative w-32 h-32 rounded-full circular-progress flex items-center justify-center">
+          <div class="absolute inset-0 rounded-full border-[8px] border-slate-700/50"></div>
+          <div class="w-[82%] h-[82%] rounded-full bg-card-dark z-10 flex flex-col items-center justify-center">
+            <span class="text-3xl font-bold text-white">75%</span>
+            <span class="text-[10px] font-bold text-slate-500 uppercase">CPU Load</span>
+          </div>
+        </div>
+        <p class="text-[10px] text-slate-500 mt-4 uppercase font-mono">8 Cores Active</p>
+      </div>
+
+      <!-- Memory Widget -->
+      <div class="bg-card-dark p-6 rounded-xl border border-border-dark shadow-xl">
+        <div class="flex justify-between items-center mb-4 text-xs font-bold uppercase text-slate-400">
+          <span>Memory Utilization</span>
+          <span class="text-primary">45%</span>
+        </div>
+        <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden mb-4">
+          <div class="bg-primary h-full rounded-full" style="width: 45%;"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 font-mono">
+          <div><p class="text-[10px] text-slate-500 uppercase">Used</p><p class="text-lg font-bold text-white">14.4 GB</p></div>
+          <div><p class="text-[10px] text-slate-500 uppercase">Total</p><p class="text-lg font-bold text-white">32.0 GB</p></div>
+        </div>
+      </div>
+
+      <!-- Stats Rapides -->
+      <div class="space-y-4">
+        <div class="bg-card-dark p-5 rounded-xl border border-border-dark flex items-center gap-4 shadow-xl">
+          <div class="p-3 bg-primary/10 rounded-lg text-primary"><span class="material-symbols-outlined text-2xl">groups</span></div>
+          <div><span class="block text-2xl font-bold text-white">12</span><span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Active Sessions</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Graphique avec SVG conforme au design -->
+  <section class="max-w-6xl mx-auto space-y-4">
+    <h3 class="text-lg font-bold text-white">Resource History (24h)</h3>
+    <div class="bg-card-dark p-6 rounded-xl border border-border-dark shadow-xl">
+      <div class="relative h-48 w-full pt-4">
+        <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 100">
+          <path d="M0 80 Q 50 20, 100 60 T 200 40 T 300 80 T 400 20 L 400 100 L 0 100 Z" fill="rgba(19, 236, 91, 0.1)"></path>
+          <path d="M0 80 Q 50 20, 100 60 T 200 40 T 300 80 T 400 20" fill="none" stroke="#13ec5b" stroke-width="2"></path>
+        </svg>
+      </div>
+    </div>
+  </section>
+</main>

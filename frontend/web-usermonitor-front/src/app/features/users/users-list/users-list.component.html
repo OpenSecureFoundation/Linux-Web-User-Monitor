@@ -1,0 +1,100 @@
+<main class="p-8 space-y-6">
+  <!-- Header de la page -->
+  <div class="flex items-center justify-between max-w-7xl mx-auto">
+    <h2 class="text-xl font-bold flex items-center gap-3 text-white uppercase tracking-wider">
+      Gestion des Utilisateurs
+      <span class="text-[10px] font-mono text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">
+        {{ userServ.users().length }} SESSIONS LIVE
+      </span>
+    </h2>
+    <button class="bg-primary hover:bg-green-500 text-background-dark px-4 py-2 rounded text-xs font-bold transition-all flex items-center gap-2 uppercase">
+      <span class="material-symbols-outlined text-sm">person_add</span>
+      Nouvel Utilisateur
+    </button>
+  </div>
+
+  <!-- Conteneur de la "Table" -->
+  <div class="max-w-7xl mx-auto border border-border-dark rounded-xl overflow-hidden bg-card-dark shadow-2xl">
+    
+    <!-- En-tête de la table -->
+    <div class="grid grid-cols-6 bg-black/40 border-b border-border-dark px-6 py-4 text-[11px] uppercase text-slate-500 font-bold tracking-widest font-mono">
+      <div class="text-center">Stat</div>
+      <div>Identity</div>
+      <div>Connection</div>
+      <div>Activity</div>
+      <div>Time</div>
+      <div class="text-right">Actions</div>
+    </div>
+
+    <!-- Liste des Utilisateurs -->
+    <div class="divide-y divide-border-dark/30">
+      @for (user of userServ.users(); track user.uid) {
+        
+        <!-- Ligne Utilisateur (Clickable) -->
+        <div class="group flex flex-col">
+          <div (click)="toggleUser(user.uid)" 
+               [class.bg-primary]="expandedUid() === user.uid"
+               class="grid grid-cols-6 items-center px-6 py-4 hover:bg-white/[0.02] cursor-pointer transition-all">
+            
+            <div class="flex justify-center">
+              <div [class]="'w-2.5 h-2.5 rounded-full shadow-lg ' + (user.status === 'active' ? 'bg-primary animate-pulse' : 'bg-slate-700')"></div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span class="font-mono font-bold text-white">{{ user.username }}</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-slate-500 border border-border-dark font-mono">{{ user.uid }}</span>
+            </div>
+
+            <div class="font-mono text-xs text-slate-400">{{ user.connection }}</div>
+            
+            <div class="text-xs text-slate-400">{{ user.procCount }} procs active</div>
+            
+            <div class="font-mono text-xs text-slate-400">{{ user.loginTime }}</div>
+
+            
+          </div>
+
+          <!-- Zone Détails (Accordéon) -->
+          @if (expandedUid() === user.uid) {
+            <div class="bg-black/40 px-16 py-6 border-t border-border-dark/20 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div class="space-y-4">
+                <div class="flex justify-between items-center border-b border-border-dark/30 pb-2">
+                  <h4 class="text-[10px] font-bold text-primary uppercase tracking-[0.2em] font-mono">Processus rattachés à l'UID</h4>
+                  <span class="text-[9px] text-slate-600 font-mono">Total: {{ userServ.getProcessesByUid(user.uid).length }}</span>
+                </div>
+
+                <!-- Sous-Tableau des Processus -->
+                <div class="space-y-1">
+                  <div class="grid grid-cols-5 text-[9px] text-slate-600 font-bold uppercase p-2 font-mono">
+                    <div>PID</div>
+                    <div class="col-span-2">Command</div>
+                    <div class="text-right">CPU %</div>
+                    <div class="text-right">Kill</div>
+                  </div>
+
+                  @for (proc of userServ.getProcessesByUid(user.uid); track proc.pid) {
+                    <div class="grid grid-cols-5 items-center p-2 rounded hover:bg-white/5 border-b border-white/5 transition-colors">
+                      <div class="font-mono text-xs text-primary font-bold">{{ proc.pid }}</div>
+                      <div class="col-span-2 font-mono text-xs text-slate-300 truncate">
+                        {{ proc.name }}
+                        @if (proc.isZombie) {
+                          <span class="ml-2 px-1 bg-red-500/20 text-red-500 text-[8px] border border-red-500/30 rounded">ZOMBIE</span>
+                        }
+                      </div>
+                      <div class="text-right font-mono text-xs text-slate-500">{{ proc.cpu }}%</div>
+                      <div class="text-right">
+                        <button (click)="userServ.killProcess(proc.pid)" class="text-slate-600 hover:text-red-500 transition-colors">
+                          <span class="material-symbols-outlined text-lg">delete_forever</span>
+                        </button>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</main>
