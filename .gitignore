@@ -1,0 +1,15 @@
+# Windows
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Office (Fichiers temporaires)
+~$*
+.~lock.*
+
+#Frontend (Angular)
+frontend/web-usermonitor-front/node_modules/
+frontend/web-usermonitor-front/dist/
+frontend/web-usermonitor-front/.angular/
+frontend/web-usermonitor-front/.vscode/
+frontend/web-usermonitor-front/npm-debug.log*
