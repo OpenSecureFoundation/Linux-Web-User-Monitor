@@ -1,3 +1,5 @@
+import { Process } from "./process.model";
+
 export interface SystemUser {
   uid: number;
   username: string;
@@ -6,4 +8,5 @@ export interface SystemUser {
   loginTime: string;
   status: 'active' | 'idle';
   isExpanded?: boolean; 
+  processes: Process[];
 }

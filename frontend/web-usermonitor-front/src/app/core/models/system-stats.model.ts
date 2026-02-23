@@ -1,4 +1,3 @@
-// system.model.ts
 export interface SystemStats {
   uptime: string;
   loadAvg: [number, number, number]; //

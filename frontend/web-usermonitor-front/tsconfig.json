@@ -3,6 +3,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "rootDir": "src",
+    "forceConsistentCasingInFileNames": true,
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,

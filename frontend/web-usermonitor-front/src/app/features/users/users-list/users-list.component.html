@@ -4,7 +4,7 @@
     <h2 class="text-xl font-bold flex items-center gap-3 text-white uppercase tracking-wider">
       Gestion des Utilisateurs
       <span class="text-[10px] font-mono text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">
-        {{ userServ.users().length }} SESSIONS LIVE
+        {{ userService.users().length }} SESSIONS LIVE
       </span>
     </h2>
     <button class="bg-primary hover:bg-green-500 text-background-dark px-4 py-2 rounded text-xs font-bold transition-all flex items-center gap-2 uppercase">
@@ -28,12 +28,12 @@
 
     <!-- Liste des Utilisateurs -->
     <div class="divide-y divide-border-dark/30">
-      @for (user of userServ.users(); track user.uid) {
+      @for (user of userService.users(); track user.uid) {
         
         <!-- Ligne Utilisateur (Clickable) -->
         <div class="group flex flex-col">
-          <div (click)="toggleUser(user.uid)" 
-               [class.bg-primary]="expandedUid() === user.uid"
+          <div (click)="toggleUser(user)" 
+               [class.bg-primary]="user.isExpanded"
                class="grid grid-cols-6 items-center px-6 py-4 hover:bg-white/[0.02] cursor-pointer transition-all">
             
             <div class="flex justify-center">
@@ -51,16 +51,54 @@
             
             <div class="font-mono text-xs text-slate-400">{{ user.loginTime }}</div>
 
-            
+            <div class="text-right">
+              <button (click)="$event.stopPropagation(); ejectModalUid = user.uid"
+                      class="px-3 py-2 rounded bg-red-600 text-white font-bold hover:bg-red-700 transition-all">
+                Eject User
+              </button>
+            </div>
           </div>
 
+          <!-- Confirmation modal (at row level, outside expanded details) -->
+          @if (ejectModalUid === user.uid) {
+            <!-- Modal Dialog -->
+            <div class="absolute inset-0 z-50 flex items-center justify-center p-6">
+              <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+              <div class="relative z-50 w-full max-w-sm bg-neutral-dark border-2 border-red-500 rounded-xl overflow-hidden shadow-[0_0_50px_rgba(236,19,19,0.3)]">
+                <div class="bg-red-500/10 p-4 border-b border-red-500/20 flex items-center gap-3">
+                  <span class="material-symbols-outlined text-red-500 font-bold">warning</span>
+                  <h3 class="font-bold text-red-500 uppercase tracking-tighter">Action Critique</h3>
+                </div>
+                <div class="p-6">
+                  <p class="text-white text-lg leading-relaxed">
+                    Voulez-vous vraiment terminer tous les processus de <span class="text-red-500 font-bold">{{ user.username }}</span> ?
+                  </p>
+                  <div class="mt-4 p-3 bg-red-500/5 rounded border border-red-500/20">
+                    <p class="text-sm text-red-500/80 flex items-center gap-2 italic">
+                      <span class="material-symbols-outlined text-sm">info</span>
+                      Cette action est irréversible.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex p-4 gap-3 bg-black/40">
+                  <button (click)="ejectModalUid = null" class="flex-1 py-3 px-4 rounded-lg border border-white/20 text-white font-bold hover:bg-white/5 transition-colors">
+                    Annuler
+                  </button>
+                  <button (click)="ejectUser(user.uid)" class="flex-1 py-3 px-4 rounded-lg bg-primary text-white font-bold hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-95">
+                    Confirmer
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+
           <!-- Zone Détails (Accordéon) -->
-          @if (expandedUid() === user.uid) {
+          @if (user.isExpanded) {
             <div class="bg-black/40 px-16 py-6 border-t border-border-dark/20 animate-in fade-in slide-in-from-top-2 duration-200">
               <div class="space-y-4">
                 <div class="flex justify-between items-center border-b border-border-dark/30 pb-2">
-                  <h4 class="text-[10px] font-bold text-primary uppercase tracking-[0.2em] font-mono">Processus rattachés à l'UID</h4>
-                  <span class="text-[9px] text-slate-600 font-mono">Total: {{ userServ.getProcessesByUid(user.uid).length }}</span>
+                  <h4 class="text-[10px] font-bold text-primary uppercase tracking-[0.2em] font-mono">Processus rattachés à {{ user.username }}({{user.uid}})</h4>
+                  <span class="text-[9px] text-slate-600 font-mono">Total: {{ user.procCount}}</span>
                 </div>
 
                 <!-- Sous-Tableau des Processus -->
@@ -72,7 +110,7 @@
                     <div class="text-right">Kill</div>
                   </div>
 
-                  @for (proc of userServ.getProcessesByUid(user.uid); track proc.pid) {
+                  @for (proc of user.processes; track proc.pid) {
                     <div class="grid grid-cols-5 items-center p-2 rounded hover:bg-white/5 border-b border-white/5 transition-colors">
                       <div class="font-mono text-xs text-primary font-bold">{{ proc.pid }}</div>
                       <div class="col-span-2 font-mono text-xs text-slate-300 truncate">
@@ -83,7 +121,7 @@
                       </div>
                       <div class="text-right font-mono text-xs text-slate-500">{{ proc.cpu }}%</div>
                       <div class="text-right">
-                        <button (click)="userServ.killProcess(proc.pid)" class="text-slate-600 hover:text-red-500 transition-colors">
+                        <button (click)="kill(proc.pid)" class="text-slate-600 hover:text-red-500 transition-colors">
                           <span class="material-symbols-outlined text-lg">delete_forever</span>
                         </button>
                       </div>
@@ -91,10 +129,38 @@
                   }
                 </div>
               </div>
+              
             </div>
           }
         </div>
       }
     </div>
   </div>
-</main>
+    <!-- Toast notifications -->
+    @if (toast) {
+      @if (toast.type === 'success') {
+        <div class="absolute bottom-28 left-0 right-0 z-30 flex justify-center px-6">
+          <div class="w-full max-w-sm bg-neutral-dark/90 border border-success-emerald rounded-lg py-3 px-4 flex items-center gap-3 shadow-2xl backdrop-blur-md">
+            <div class="size-8 rounded-full bg-success-emerald/20 flex items-center justify-center text-success-emerald shrink-0">
+              <span class="material-symbols-outlined text-[20px]">check_circle</span>
+            </div>
+            <p class="text-sm text-success-emerald font-medium leading-tight">
+              {{ toast.message }}
+            </p>
+          </div>
+        </div>
+      }
+      @else {
+        <div class="absolute bottom-28 left-0 right-0 z-30 flex justify-center px-6">
+          <div class="w-full max-w-sm bg-neutral-dark/90 border border-red-500 rounded-lg py-3 px-4 flex items-center gap-3 shadow-2xl backdrop-blur-md">
+            <div class="size-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 shrink-0">
+              <span class="material-symbols-outlined text-[20px]">error</span>
+            </div>
+            <p class="text-sm text-red-500 font-medium leading-tight">
+              {{ toast.message }}
+            </p>
+          </div>
+        </div>
+      }
+    }
+  </main>

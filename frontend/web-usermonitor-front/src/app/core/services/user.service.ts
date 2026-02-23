@@ -1,38 +1,49 @@
-import { Injectable, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { SystemUser } from '../models/system-user.model';
 import { Process } from '../models/process.model';
-
+import { HttpClient } from '@angular/common/http';
+import { interval, map, Observable, switchMap } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'; // Pour éviter les fuites mémoire
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  // Signal pour la liste des utilisateurs
-  users = signal<SystemUser[]>([
-    { uid: 0, username: 'root', connection: 'tty1', procCount: 12, loginTime: '02:15:22', status: 'active' },
-    { uid: 1001, username: 'jdoe', connection: 'pts/0 (192.168.1.42)', procCount: 3, loginTime: '00:45:10', status: 'active' },
-    { uid: 33, username: 'nginx', connection: 'system', procCount: 4, loginTime: '--:--:--', status: 'idle' }
-  ]);
+  private http = inject(HttpClient);
+  private destroyRef = inject(DestroyRef);
 
-  constructor() {}
-
-  // Simulation de récupération des processus d'un UID
-  getProcessesByUid(uid: number): Process[] {
-    if (uid === 1001) {
-      return [
-        { pid: 1024, name: '/bin/bash', cpu: 0.0, mem: 0.2, isZombie: false },
-        { pid: 2045, name: 'python main.py', cpu: 15.4, mem: 4.5, isZombie: false },
-        { pid: 3099, name: '[Z] ZOMBIE', cpu: 0, mem: 0, isZombie: true }
-      ];
-    }
-    return [{ pid: 500, name: 'systemd', cpu: 0.1, mem: 0.1, isZombie: false }];
+  users = signal<SystemUser[]>([]);
+  constructor() {
+    this.initMonitoring();
+  }
+  //fonction d'initialisation du monitoring des utilisateurs
+  private initMonitoring() {
+    interval(5000).pipe(
+      switchMap(() => this.http.get<any>(`${environment.apiUrl}/dashboard`)),
+      map(data => data.users as SystemUser[]),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(updatedUsers => {
+      // Fusionner les nouvelles données avec l'état expanded existant
+      this.users.update(currentUsers =>
+        updatedUsers.map((newUser: SystemUser) => {
+          const existingUser = currentUsers.find(u => u.uid === newUser.uid);
+          return {
+            ...newUser,
+            isExpanded: existingUser?.isExpanded ?? false
+          };
+        })
+      );
+    });
   }
 
+  // Fonction pour tuer un processus par son PID
   killProcess(pid: number) {
-    console.log(`Sending SIGKILL to PID ${pid} via Backend...`);
-    // Ici l'appel API vers FastAPI
+    return this.http.delete(`${environment.apiUrl}/process/${pid}`);
   }
 
-  ejectUser(uid: number) {
-    console.log(`Ejecting all processes for UID ${uid}...`);
+  // Fonction pour récupérer les processus d'un utilisateur par son UID
+  getProcessesFromUser(uid: number): Process[] {
+    const user = this.users().find(u => u.uid === uid);
+    return user?.processes || [];
   }
 }
