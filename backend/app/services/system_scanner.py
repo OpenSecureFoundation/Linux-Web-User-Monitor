@@ -11,16 +11,16 @@ class SystemScanner:
         self.last_sessions: List[Dict[str, Any]] = []
 
     async def start_monitoring(self):
-        """Boucle de scan périodique (Diagramme 1 - Loop 5s)"""
+        """Boucle de scan périodique ( Loop 5s)"""
         self._running = True
         while self._running:
-            # Étape 5 & 6 : Appel de l'interface Kernel
+            # Appel de l'interface Kernel
             current_sessions = KernelInterface.read_utmp()
             
-            # Étape 9 : Détecter changement
+            # Détecter changement
             if self._has_changed(current_sessions):
                 self.last_sessions = current_sessions
-                # Étape 10 : Notification (prêt pour WebSockets)
+                # Notification 
                 await self.notify_new_session(current_sessions)
                 
             await asyncio.sleep(5)
@@ -36,7 +36,7 @@ class SystemScanner:
         self._running = False
 
     def get_dashboard_data(self):
-        """Respecte les contrats SystemStats et SystemUser"""
+
         raw_stats = KernelInterface.read_system_stats()
         all_procs = KernelInterface.get_all_processes()
         utmp_sessions = KernelInterface.read_utmp()

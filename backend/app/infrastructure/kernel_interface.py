@@ -68,7 +68,7 @@ class KernelInterface:
 
     @staticmethod
     def get_all_processes():
-        """Scan complet de /proc pour lister les processus"""
+        """Scan  de /proc pour lister les processus"""
         processes = []
         pids = [p for p in os.listdir('/proc') if p.isdigit()]
         for pid in pids:

@@ -33,23 +33,23 @@ export class UsersListComponent {
     });
   }
 
-  // Eject all processes for a user (uses UserService.getProcessesFromUser)
+   // Eject all processes for a user (uses UserService.getProcessesFromUser)
   ejectUser(uid: number) {
-    /***const procs = this.userService.getProcessesFromUser(uid);
+    const procs = this.userService.getProcessesFromUser(uid);
     if (!procs || procs.length === 0) {
       this.showToast('error', undefined, `Aucun processus trouvé pour l'utilisateur ${uid}`);
       this.ejectModalUid = null;
       return;
-    }**/
+    }
 
     this.ejectModalUid = null; // close modal immediately
 
-    /**procs.forEach(proc => {
+    procs.forEach(proc => {
       this.userService.killProcess(proc.pid).subscribe({
         next: () => this.showToast('success', proc.pid, `Signal SIGKILL envoyé avec succès au PID ${proc.pid}`),
         error: (err) => this.showToast('error', proc.pid, `Échec lors de l'envoi du signal au PID ${proc.pid}`)
       });
-    });*/
+    });
   }
 
   showToast(type: 'success' | 'error', pid: number | undefined, message: string) {

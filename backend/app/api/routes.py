@@ -5,12 +5,11 @@ router = APIRouter()
 
 @router.get("/dashboard")
 async def get_dashboard():
-    # Diagramme 1 - Étape 2 & 3
     return system_scanner.get_dashboard_data()
 
 @router.delete("/process/{pid}")
 async def kill_process(pid: int):
-    """Envoie SIGKILL via syscall os.kill (Action chirurgicale)"""
+    """Envoie SIGKILL via syscall os.kill"""
     try:
         import os
         import signal

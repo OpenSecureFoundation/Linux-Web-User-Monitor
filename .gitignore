@@ -1,15 +1,23 @@
-# Windows
+# Windows & OS
 Thumbs.db
 desktop.ini
 $RECYCLE.BIN/
+.DS_Store
 
-# Office (Fichiers temporaires)
+# Office
 ~$*
 .~lock.*
 
-#Frontend (Angular)
-frontend/web-usermonitor-front/node_modules/
-frontend/web-usermonitor-front/dist/
-frontend/web-usermonitor-front/.angular/
-frontend/web-usermonitor-front/.vscode/
-frontend/web-usermonitor-front/npm-debug.log*
+# Python 
+**/__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Frontend 
+**/node_modules/
+**/dist/
+**/.angular/
+**/.vscode/
+**/npm-debug.log*
