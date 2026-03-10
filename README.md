@@ -24,7 +24,7 @@ Le projet est documenté étape par étape. Les documents de référence sont di
 | **Cahier des Charges** | Objectifs, périmètre et besoins du projet | 📄 PDF | [Consulter](./docs/specifications/cahier_des_charges.pdf) |
 | **Cahier d'Analyse** | Les objectifs du système et les contraintes fonctionnelles et non fonctionnelles | 📄 PDF | [Consulter](./docs/analyse/cahier_analyse.pdf) |
 | **Cahier de Conception** | Architecture logique du système, l’organisation des composants et leurs interactions| 📄 PDF | [Consulter](./docs/conception/cahier_conception.pdf) |
-| **Dossier de réalisation** | Guide technique et choix d'implémentation | 📄 PDF | [Consulter](./docs/realisation/dossier_realisation.pdf) |
+| **Dossier de réalisation** | Guide technique et choix d'implémentation | 📄 PDF | [Consulter](./docs/realisation/dossier_realisation_.pdf) |
 ---
 
 ## Stack Technique (Prévisionnelle)
